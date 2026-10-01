@@ -3,43 +3,58 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>お月見AR体験</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
 ```
-<!-- model-viewerを読み込む -->
+<title>お月見AR体験</title>
+
+<!-- Google model-viewer -->
 <script type="module"
-    src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js">
+    src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js">
 </script>
 
 <style>
+    html,
     body {
         margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
         background: #000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        color: #fff;
         font-family: sans-serif;
     }
 
     model-viewer {
         width: 100%;
         height: 100%;
+        background-color: #000;
     }
 
     .ar-button {
         position: absolute;
+        left: 50%;
         bottom: 50px;
+        transform: translateX(-50%);
+
         background: #ffcc00;
         color: #000;
+
         border: none;
+        border-radius: 30px;
+
         padding: 15px 30px;
+
         font-size: 18px;
         font-weight: bold;
-        border-radius: 30px;
+
         cursor: pointer;
+
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .ar-button:active {
+        transform: translateX(-50%) scale(0.95);
     }
 </style>
 ```
@@ -50,18 +65,52 @@
 
 ```
 <model-viewer
+    id="moonViewer"
+
     src="moon.glb"
+
+    alt="お月見の月"
+
     ar
-    ar-modes="webxr scene-viewer quick-look"
+
+    <!-- AndroidではWebXRを使用 -->
+    ar-modes="webxr"
+
     camera-controls
+
+    <!-- 通常の3D表示では自動回転 -->
     auto-rotate
+    auto-rotate-delay="0"
+    rotation-per-second="10deg"
+
     interaction-prompt="none">
 
-    <button slot="ar-button" class="ar-button">
+    <button
+        slot="ar-button"
+        class="ar-button">
+
         🌕 タップしてARを開始
+
     </button>
 
 </model-viewer>
+
+
+<script>
+    const viewer = document.getElementById("moonViewer");
+
+    /*
+     * 通常の3D表示では model-viewer の
+     * auto-rotate を使用します。
+     */
+
+    viewer.addEventListener("ar-status", (event) => {
+
+        console.log("AR status:", event.detail.status);
+
+    });
+
+</script>
 ```
 
 </body>
